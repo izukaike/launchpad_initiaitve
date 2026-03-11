@@ -6,7 +6,7 @@ export default function LaunchPadHomepage() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
 
-  const handleSend = (e) => {
+  const handleSend = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const subject = encodeURIComponent(name);
