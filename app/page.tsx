@@ -1,21 +1,34 @@
 "use client";
 import { useState } from "react";
+import { NextResponse } from "next/server";
 
 export default function LaunchPadHomepage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
 
-  const handleSend = (e: React.FormEvent<HTMLFormElement>) => {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    const subject = encodeURIComponent(name);
-    const body = encodeURIComponent(
-      `Email: ${email}\n\nMessage:\n${message}`
-    );
+    const res = await fetch("/api/contact", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name, email, message }),
+    });
 
-    window.location.href = `mailto:launchpad.stem@gmail.com?subject=${subject}&body=${body}`;
-  };
+    if (res.ok) {
+      setName("");
+      setEmail("");
+      setMessage("");
+      alert("Message sent!");
+    } else {
+      alert("Something went wrong.");
+    }
+  }
+
+
   return (
     <main className="min-h-screen bg-white text-slate-900">
 
@@ -86,7 +99,7 @@ export default function LaunchPadHomepage() {
                 Launchpad was created from the belief that engineering and technology 
                 should feel exciting, accessible, and empowering to all young people. 
                 Through teaching middle and high school students over the years, it became 
-                clear that many young people have tremendous potential but do always have the 
+                clear that many young people have tremendous potential but do not always have the 
                 exposure or opportunities to explore engineering. That is where Launchpad comes in.
               </p>
 
@@ -144,14 +157,35 @@ export default function LaunchPadHomepage() {
 
             <h2 className="mt-4 text-4xl font-black text-[#39A8BD] md:text-6xl items-center justify-center text-center px-6">
               Lets Connect!
+   
             </h2>
       
           </div>
 
+          <p className="mt-4 text-2xl font-black-9 text-[#40BAD2] text-slate-700 text-center ">
+            Email: name@gmail.com
+          </p>
+          {/*
           <form
-            onSubmit={handleSend}
-          className="bg-white p-8 shadow-sm ring-1 ring-slate-200"
-           >
+              onSubmit={async (e) => {
+                e.preventDefault();
+
+                await fetch("/api/contact", {
+                  method: "POST",
+                  body: JSON.stringify({
+                    name,
+                    email,
+                    message
+                  }),
+                  headers: {
+                    "Content-Type": "application/json"
+                  }
+                });
+
+                alert("Message sent!");
+              }}
+              className="bg-white p-8 shadow-sm ring-1 ring-slate-200"
+            >
           <div className="grid gap-5">
 
             <div>
@@ -201,6 +235,7 @@ export default function LaunchPadHomepage() {
 
           </div>
         </form>
+        */}
         </div>
       </section>
     </main>
